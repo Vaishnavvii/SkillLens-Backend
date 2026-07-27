@@ -7,9 +7,15 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import com.skilllens.backend.security.JwtFilter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 public class SecurityConfig {
+
+        @Autowired
+        private JwtFilter jwtFilter;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -31,6 +37,11 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http)
             )
             .httpBasic(Customizer.withDefaults());
 
+            http.addFilterBefore(
+                jwtFilter,
+                UsernamePasswordAuthenticationFilter.class
+                );
+                
     return http.build();
 }
 }
